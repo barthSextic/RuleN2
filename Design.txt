@@ -1,0 +1,21 @@
+Input >>
+Get Dimensions (Width x Height)
+Get seed start information (Center, Random, Modular)
+Get rule [0, 255]
+Get output file name
+Get path
+
+Process >>
+# byte array elements will take values on [0, 255]
+Create byte array of dimension w x 1
+    Populate with seed
+
+Use rule to populate remaining bytes F(r, c)
+    Read element (r-1, c-1), (r-1, c), (r-1, c+1)
+    If r-1 || r+1 are out of bounds, assume empty
+    Iterate from r = 1 > r = Height
+
+    Apply F(r, c) to current cell
+
+Output >>
+    Use image write to build png
