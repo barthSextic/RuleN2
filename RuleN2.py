@@ -1,9 +1,8 @@
+import random
 import sys
-import tkinter as tk
+from tkinter import *
 import cv2 as cv
 import numpy as np
-import os
-from tkinter import *
 
 base = 2
 ruleSize = 256
@@ -15,7 +14,6 @@ buffer = []
 
 # Make a rule set
 def toDigits(n, b):
-    """Convert a positive number n to its digit representation in base b."""
     digits = []
     while n > 0:
         digits.insert(0, n % b)
@@ -32,57 +30,52 @@ def ruleSet(size, max, array):
         array.insert(i, element)
 
 
+# Creates rules and conditions
 ruleSet(ruleSize, 8, rules)
-
 ruleSet(8, 3, condition)
-
-#for x in rules:
-#    print(x)
-#print(len(rules))
-#for y in condition:
-#    print(y)
 
 
 def buildSeed(width):
     # make middle seed
-    buffDump = []
+    buffDumpMid = []
     halfway = (width - 1) // 2
     for i in range(width - 1):
-        buffDump.insert(i, 0)
-    buffDump.insert(halfway, 1)
-    seed.insert(0, buffDump)
+        buffDumpMid.insert(i, 0)
+    buffDumpMid.insert(halfway, 1)
+    seed.insert(0, buffDumpMid)
     # make random seed
-
+    buffDumpRand = []
+    for j in range(width):
+        buffDumpRand.insert(j, random.randint(0, 1))
+        seed.insert(1, buffDumpRand)
     # make modular seed
 
 
 def buildImage(rSet, seedRow, column, row):
-    #print(rSet)
     buffer.insert(0, seedRow)
-    for r in range(1, row):
-        print(buffer[r-1])
+    for r in range(row - 1):
         rowBuff = []
         for c in range(column):
             try:
                 if c <= 0:
-                    cellBuff = [0, buffer[r - 1][c], buffer[r - 1][c + 1]]
+                    cellBuff = [0, buffer[r][c], buffer[r][c + 1]]
                 elif c >= (column - 1):
-                    cellBuff = [buffer[r - 1][c - 1], buffer[r - 1][c], 0]
+                    cellBuff = [buffer[r][c - 1], buffer[r][c], 0]
                 else:
-                    cellBuff = [buffer[r - 1][c - 1], buffer[r - 1][c], buffer[r - 1][c + 1]]
+                    cellBuff = [buffer[r][c - 1], buffer[r][c], buffer[r][c + 1]]
             except:
-                print(r)
+                print(r + 1)
                 print(c)
-            # print(cellBuff)
             # compare cell buffer with condition and print appropriate rule output
+            # need the check for an unknown bug
+            check = 1
             for z in range(7):
                 if cellBuff == condition[z]:
-                    # print(condition[z])
-                    # print(z)
                     rowBuff.insert(c, rSet[7 - z])
-        buffer.insert(r, rowBuff)
-    # for x in range(column):
-    #    print(buffer[x])
+                    check = 0
+            if bool(check):
+                rowBuff.insert(c, 0)
+        buffer.insert(r + 1, rowBuff)
     return buffer
 
 
@@ -98,15 +91,15 @@ borderW = 5
 
 # get width
 w = Entry(root, width=textBoxW, borderwidth=borderW)
-w.insert(0, "11")
+w.insert(0, "1920")
 
 # get height
 h = Entry(root, width=textBoxW, borderwidth=borderW)
-h.insert(0, "11")
+h.insert(0, "1080")
 
 # get rule [0, 255]
 r = Entry(root, width=3, borderwidth=borderW)
-r.insert(0, "30")
+r.insert(0, "73")
 
 
 def clickRender():
@@ -114,17 +107,11 @@ def clickRender():
     width = int(w.get())
     height = int(h.get())
     buildSeed(width)
-
-    # print(seed[0])
     imageArray = np.array(buildImage(rule, seed[0], width, height))
-
     for x in range(len(imageArray)):
         for y in range(len(imageArray[x])):
             imageArray[x][y] *= 255
-
-    print(imageArray)
     cv.imwrite("test.png", imageArray)
-    #print(rule)
     sys.exit()
 
 
