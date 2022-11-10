@@ -2,8 +2,8 @@
 Rick Howell
 Rule N Cellular Automata Generator
 
-v 0.9.1
-Fixed GUI Bug...
+v 0.9.2
+Creates unique* filenames based on parameters
 
 v 0.9.0
 Spits out a file named 'output.png' in the source folder
@@ -148,7 +148,8 @@ def clickRender():
     for x in range(len(imageArray)):
         for y in range(len(imageArray[x])):
             imageArray[x][y] *= 255
-    cv.imwrite("output.png", imageArray)
+    fileName = "Rule" + r.get() + "_" + w.get() + "x" + h.get() + "_" + str(random.randint(0, 65535)) + ".png"
+    cv.imwrite(fileName, imageArray)
     sys.exit()
 
 
