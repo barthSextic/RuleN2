@@ -2,6 +2,9 @@
 Rick Howell
 Rule N Cellular Automata Generator
 
+v 0.9.1
+Fixed GUI Bug...
+
 v 0.9.0
 Spits out a file named 'output.png' in the source folder
 There is no input validation
@@ -155,7 +158,8 @@ txtWidth = Label(root, text="Width: ")
 txtHeight = Label(root, text="Height: ")
 txtSeed = Label(root, text="Select Seed")
 txtModular = Label(root, text="a ~ b (mod n)")
-txtB = Label
+txtB = Label(root, text="< b")
+txtN = Label(root, text="< n")
 
 btnRender = Button(root, text="Render", command=clickRender, padx=50, pady=20, fg="red")
 
@@ -164,6 +168,8 @@ txtInfo.grid(row=0, column=0)
 txtWidth.grid(row=7, column=0)
 txtHeight.grid(row=8, column=0)
 txtModular.grid(row=1, column=1)
+txtB.grid(row=2, column=3)
+txtN.grid(row=3, column=3)
 
 btnRender.grid(row=10, column=0)
 
