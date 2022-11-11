@@ -2,6 +2,9 @@
 Rick Howell
 Rule N Cellular Automata Generator
 
+v 0.9.3
+Added new file and more parameters
+
 v 0.9.2
 Creates unique* filenames based on parameters
 
@@ -16,6 +19,7 @@ import sys
 from tkinter import *
 import cv2 as cv
 import numpy as np
+import lm
 
 base = 2
 ruleSize = 256
@@ -64,7 +68,7 @@ def buildSeed(width, n, b):
     # make modular seed
     buffDumpMod = []
     for k in range(width):
-        if k % n == 0:
+        if k % n == b:
             buffDumpMod.insert(k, 1)
         else:
             buffDumpMod.insert(k, 0)
@@ -144,11 +148,17 @@ def clickRender():
     buildSeed(width, int(n.get()), int(b.get()))
     s = seedSelect.get()
     # Build image with information
-    imageArray = np.array(buildImage(rule, seed[s], width, height))
-    for x in range(len(imageArray)):
-        for y in range(len(imageArray[x])):
-            imageArray[x][y] *= 255
-    fileName = "Rule" + r.get() + "_" + w.get() + "x" + h.get() + "_" + str(random.randint(0, 65535)) + ".png"
+    """
+    WIP
+    """
+    # PRINTS NORMALLY
+    #image = lm.scale2D(buildImage(rule, seed[s], width, height), 255)
+    # WORKING ON THIS METHOD
+    bareImage = buildImage(rule, seed[s], width, height)
+    image = lm.stretch2D(lm.scale2D(bareImage, 255), 4)
+
+    imageArray = np.array(image)
+    fileName = "X__Rule" + r.get() + "_" + w.get() + "x" + h.get() + "_" + str(random.randint(0, 65535)) + ".png"
     cv.imwrite(fileName, imageArray)
     sys.exit()
 
