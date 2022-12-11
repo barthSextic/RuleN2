@@ -139,6 +139,9 @@ s1 = Radiobutton(root, text="Middle Start", variable=seedSelect, value=0)
 s2 = Radiobutton(root, text="Random Start", variable=seedSelect, value=1)
 s3 = Radiobutton(root, text="Modular Start", variable=seedSelect, value=2)
 
+# get scale
+scale = Entry(root, width=textBoxWSmall, borderwidth=borderW)
+scale.insert(0, 1)
 
 def clickRender():
     rule = rules[int(r.get())]
@@ -147,18 +150,18 @@ def clickRender():
     # width, n, b
     buildSeed(width, int(n.get()), int(b.get()))
     s = seedSelect.get()
-    # Build image with information
-    """
-    WIP
-    """
-    # PRINTS NORMALLY
-    #image = lm.scale2D(buildImage(rule, seed[s], width, height), 255)
-    # WORKING ON THIS METHOD
-    bareImage = buildImage(rule, seed[s], width, height)
-    image = lm.stretch2D(lm.scale2D(bareImage, 255), 4)
+    #scale factor
+    scaleFactor = int(scale.get())
 
+    # Build image with information
+    bareImage = buildImage(rule, seed[s], width, height)
+    image = lm.stretch2D(lm.scale2D(bareImage, 255), scaleFactor)
+
+    # write
     imageArray = np.array(image)
-    fileName = "X__Rule" + r.get() + "_" + w.get() + "x" + h.get() + "_" + str(random.randint(0, 65535)) + ".png"
+    widthString = str(width * scaleFactor)
+    heightString = str(height * scaleFactor)
+    fileName = "Rule" + r.get() + " " + widthString + "x" + heightString + " " + str(random.randint(0, 65535)) + ".png"
     cv.imwrite(fileName, imageArray)
     sys.exit()
 
@@ -167,10 +170,11 @@ def clickRender():
 txtInfo = Label(root, text="Rule [0, 255]: ")
 txtWidth = Label(root, text="Width: ")
 txtHeight = Label(root, text="Height: ")
-txtSeed = Label(root, text="Select Seed")
+txtSeed = Label(root, text="Select Seed: ")
 txtModular = Label(root, text="a ~ b (mod n)")
 txtB = Label(root, text="< b")
 txtN = Label(root, text="< n")
+txtScale = Label(root, text="Scale up factor: ")
 
 btnRender = Button(root, text="Render", command=clickRender, padx=50, pady=20, fg="red")
 
@@ -181,8 +185,9 @@ txtHeight.grid(row=8, column=0)
 txtModular.grid(row=1, column=1)
 txtB.grid(row=2, column=3)
 txtN.grid(row=3, column=3)
+txtScale.grid(row=20, column=0)
 
-btnRender.grid(row=10, column=0)
+btnRender.grid(row=64, column=0)
 
 w.grid(row=7, column=1)
 h.grid(row=8, column=1)
@@ -195,5 +200,7 @@ s3.grid(row=3, column=0)
 
 b.grid(row=2, column=1)
 n.grid(row=3, column=1)
+
+scale.grid(row=20, column=1)
 
 root.mainloop()
